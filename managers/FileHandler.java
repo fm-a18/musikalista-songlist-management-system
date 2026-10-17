@@ -1,4 +1,4 @@
-package utils;
+package managers;
 
 import models.Genre;
 import models.Song;
@@ -15,8 +15,8 @@ import java.util.List;
 
 public class FileHandler {
 
-    private static final String SONGS_FILE = "songs.txt";
-    private static final String REQUESTS_FILE = "requests.txt";
+    private static final String SONGS_FILE = "SONG_LIST.txt";
+    private static final String REQUESTS_FILE = "REQUEST_LIST.txt";
     private static final String DELIMITER = "|";
     private static final String SPLIT_REGEX = "\\|";
 
