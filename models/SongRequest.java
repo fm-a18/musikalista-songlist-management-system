@@ -1,18 +1,29 @@
 package models;
 
 public class SongRequest {
-    private int requestNumber;
+    private final int requestNumber;
     private String studentName;
     private Song song;
     private static int requestCounter = 1;
 
-    public SongRequest(String studentName, Song song) {
+    public SongRequest(String studentName, Song song){
+        this(requestCounter, studentName, song);
+    }
+
+    public SongRequest(int requestNumber, String studentName, Song song) {
+        if (requestNumber < 1) {
+            throw new IllegalArgumentException("Song number must be positive.");
+        }
         validateStudentName(studentName);
         validateSong(song);
 
         this.requestNumber = requestCounter++;
         this.studentName = studentName.trim();
         this.song = song;
+
+        if (requestNumber >= requestCounter) {
+            requestCounter = requestNumber + 1;
+        }
     }
 
     private static void validateStudentName(String studentName) {
@@ -21,7 +32,7 @@ public class SongRequest {
         }
         if (!studentName.trim().matches("[\\p{L} .'-]+")) {
             throw new IllegalArgumentException(
-                "Student name may only contain letters, spaces, periods, apostrophes, and hyphens.");
+                    "Student name may only contain letters, spaces, periods, apostrophes, and hyphens.");
         }
     }
 
@@ -31,10 +42,21 @@ public class SongRequest {
         }
     }
 
-    public int getRequestNumber() { return requestNumber; }
-    public String getStudentName() { return studentName; }
-    public Song getSong() { return song; }
-    public static int getRequestCounter() { return requestCounter; }
+    public int getRequestNumber() {
+        return requestNumber;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public Song getSong() {
+        return song;
+    }
+
+    public static int getRequestCounter() {
+        return requestCounter;
+    }
 
     public void setStudentName(String studentName) {
         validateStudentName(studentName);

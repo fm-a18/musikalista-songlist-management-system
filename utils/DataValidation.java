@@ -5,7 +5,7 @@ import models.Genre;
 import java.util.Scanner;
 
 public class DataValidation {
-    public static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     private static final int MAX_TEXT_LENGTH = 50;
 
     public static String validateText(String prompt) {
@@ -20,6 +20,8 @@ public class DataValidation {
                 System.out.printf("Error: %s cannot be empty.%n", prompt);
             } else if (input.length() > MAX_TEXT_LENGTH) {
                 System.out.printf("Error: %s must be %d characters or fewer.%n", prompt, MAX_TEXT_LENGTH);
+            } else if (input.contains("|")) {
+                System.out.printf("Error: %s cannot contain the '|' character.\n", prompt);
             } else {
                 isValidated = true;
             }
@@ -32,7 +34,7 @@ public class DataValidation {
         String input = "";
 
         while (!isValidated) {
-            System.out.print("Receiver Name: ");
+            System.out.print("Student Name: ");
             try {
                 input = sc.nextLine().trim();
             } catch (java.util.NoSuchElementException e) {
@@ -41,9 +43,9 @@ public class DataValidation {
             }
 
             if (input.isEmpty()) {
-                System.out.println("Error: Receiver Name cannot be empty.");
+                System.out.println("Error: Student Name cannot be empty.");
             } else if (!input.matches("^\\p{L}[\\p{L} .'-]{0,49}$")) {
-                System.out.println("Error: Receiver Name must be up to 50 characters (letters, spaces, . ' - only).");
+                System.out.println("Error: Student Name must be up to 50 characters (letters, spaces, . ' - only).");
             } else {
                 isValidated = true;
             }

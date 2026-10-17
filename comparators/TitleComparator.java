@@ -1,4 +1,12 @@
 package comparators;
 
-public class TitleComparator {
+import models.Song;
+
+import java.util.Comparator;
+
+public class TitleComparator implements Comparator<Song> {
+    @Override
+    public int compare(Song a, Song b){
+        return a.getTitle().compareToIgnoreCase(b.getTitle());
+    }
 }

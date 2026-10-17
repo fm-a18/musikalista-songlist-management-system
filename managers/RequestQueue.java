@@ -1,208 +1,128 @@
 package managers;
- 
-import java.util.ArrayList;
-import java.util.Collections;
+
+import models.Song;
+import models.SongRequest;
+import utils.DataValidation;
+import utils.DisplayUtils;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
- 
+import java.util.Queue;
+
 public class RequestQueue {
- 
-    public static final int DEFAULT_MAX_QUEUE_SIZE = 100;
-    public static final int DEFAULT_MAX_PER_REQUESTER = 3;
-    public static final int MAX_TITLE_LENGTH = 100;
-    public static final int MAX_NAME_LENGTH = 50;
- 
-    public enum AddResult {
-        ADDED,
-        INVALID_TITLE,
-        INVALID_REQUESTER,
-        DUPLICATE_SONG,
-        QUEUE_FULL,
-        REQUESTER_LIMIT_REACHED
+    private static final int MAX_QUEUE_SIZE = 100;
+    private static final int MAX_PER_STUDENT = 3;
+
+    private static RequestQueue instance;
+    private final Queue<SongRequest> queue = new LinkedList<>();
+    private final FileHandler fileHandler = new FileHandler();
+    private SongRequest currentRequest;
+
+    private RequestQueue() {
+        queue.addAll(fileHandler.readAllRequests((SongBook.getInstance().getSongs())));
     }
- 
-    public static class Request {
-        private final String songTitle;
-        private final String requestedBy;
-        private final long timestamp;
- 
-        public Request(String songTitle, String requestedBy) {
-            if (!isValidText(songTitle, MAX_TITLE_LENGTH)) {
-                throw new IllegalArgumentException("Invalid song title");
-            }
-            if (!isValidText(requestedBy, MAX_NAME_LENGTH)) {
-                throw new IllegalArgumentException("Invalid requester name");
-            }
-            this.songTitle = normalize(songTitle);
-            this.requestedBy = normalize(requestedBy);
-            this.timestamp = System.currentTimeMillis();
+
+    public static RequestQueue getInstance() {
+        if (instance == null) {
+            instance = new RequestQueue();
         }
- 
-        public String getSongTitle() {
-            return songTitle;
+        return instance;
+    }
+
+    // Enqueue
+    public void addRequest() {
+        if (queue.size() >= MAX_QUEUE_SIZE) {
+            System.out.println("Error: The request queue is full.");
+            return;
         }
- 
-        public String getRequestedBy() {
-            return requestedBy;
+
+        String student = DataValidation.validateStudentName();
+
+        if (countRequestsBy(student) >= MAX_PER_STUDENT) {
+            System.out.println("Error: " + student + " already has "
+                    + MAX_PER_STUDENT + " pending requests.");
+            return;
         }
- 
-        public long getTimestamp() {
-            return timestamp;
+
+        int number = DataValidation.validateSongNumber();
+        Song song = SongBook.getInstance().findBySongNumber(number);
+
+        if (song == null) {
+            System.out.println("Error: No song with number " + number + ".");
+            return;
         }
- 
-        @Override
-        public String toString() {
-            return "\"" + songTitle + "\" requested by " + requestedBy;
+
+        if (isQueued(song)) {
+            System.out.println("Error: That song is already in the queue.");
+            return;
+        }
+
+        SongRequest request = new SongRequest(student, song);
+        queue.offer(request);
+        if (fileHandler.appendRequest(request)) {
+            System.out.println("Request added (position " + queue.size() + "): " + request);
+        } else {
+            System.out.println("Request added but could not save to file.");
         }
     }
- 
-    private final LinkedList<Request> queue = new LinkedList<>();
-    private final int maxQueueSize;
-    private final int maxPerRequester;
- 
-    public RequestQueue() {
-        this(DEFAULT_MAX_QUEUE_SIZE, DEFAULT_MAX_PER_REQUESTER);
+
+    // Dequeue
+    public void playNext() {
+        currentRequest = queue.poll();
+
+        if (currentRequest == null) {
+            System.out.println("No pending requests.");
+            return;
+        }
+
+        if (!fileHandler.saveAllRequests(queue)) {
+            System.out.println("Warning: could not update the request file.");
+        }
     }
- 
-    public RequestQueue(int maxQueueSize, int maxPerRequester) {
-        if (maxQueueSize <= 0) {
-            throw new IllegalArgumentException("Max queue size must be greater than 0");
+
+    // View
+
+    public void viewCurrentSong() {
+        if (currentRequest == null) {
+            System.out.println("Nothing is playing right now.");
+            return;
         }
-        if (maxPerRequester <= 0) {
-            throw new IllegalArgumentException("Max requests per person must be greater than 0");
-        }
-        if (maxPerRequester > maxQueueSize) {
-            throw new IllegalArgumentException("Max requests per person cannot exceed max queue size");
-        }
-        this.maxQueueSize = maxQueueSize;
-        this.maxPerRequester = maxPerRequester;
+        System.out.println("Now playing: " + currentRequest);
     }
- 
-    public synchronized AddResult addRequest(String songTitle, String requestedBy) {
-        if (!isValidText(songTitle, MAX_TITLE_LENGTH)) {
-            return AddResult.INVALID_TITLE;
-        }
-        if (!isValidText(requestedBy, MAX_NAME_LENGTH)) {
-            return AddResult.INVALID_REQUESTER;
-        }
-        if (queue.size() >= maxQueueSize) {
-            return AddResult.QUEUE_FULL;
-        }
-        if (isQueued(songTitle)) {
-            return AddResult.DUPLICATE_SONG;
-        }
-        if (countRequestsBy(requestedBy) >= maxPerRequester) {
-            return AddResult.REQUESTER_LIMIT_REACHED;
-        }
-        queue.addLast(new Request(songTitle, requestedBy));
-        return AddResult.ADDED;
+
+    public void viewRequests() {
+        DisplayUtils.requestHeader("REQUEST QUEUE");
+        DisplayUtils.displayRequests(queue);
     }
- 
-    public synchronized Optional<Request> playNext() {
-        return Optional.ofNullable(queue.pollFirst());
-    }
- 
-    public synchronized Optional<Request> peekNext() {
-        return Optional.ofNullable(queue.peekFirst());
-    }
- 
-    public synchronized boolean removeRequest(String songTitle) {
-        if (songTitle == null || normalize(songTitle).isEmpty()) {
-            return false;
-        }
-        String target = normalize(songTitle);
-        return queue.removeIf(r -> r.getSongTitle().equalsIgnoreCase(target));
-    }
- 
-    public synchronized boolean isQueued(String songTitle) {
-        if (songTitle == null || normalize(songTitle).isEmpty()) {
-            return false;
-        }
-        String target = normalize(songTitle);
-        for (Request r : queue) {
-            if (r.getSongTitle().equalsIgnoreCase(target)) {
+
+    public boolean isQueued(Song song) {
+        for (SongRequest r : queue) {
+            if (r.getSong().equals(song)) {
                 return true;
             }
         }
         return false;
     }
- 
-    public synchronized int getPosition(String songTitle) {
-        if (songTitle == null || normalize(songTitle).isEmpty()) {
-            return -1;
-        }
-        String target = normalize(songTitle);
-        int position = 1;
-        for (Request r : queue) {
-            if (r.getSongTitle().equalsIgnoreCase(target)) {
-                return position;
-            }
-            position++;
-        }
-        return -1;
-    }
- 
-    public synchronized int countRequestsBy(String requestedBy) {
-        if (requestedBy == null || normalize(requestedBy).isEmpty()) {
-            return 0;
-        }
-        String target = normalize(requestedBy);
+
+    public int countRequestsBy(String student) {
         int count = 0;
-        for (Request r : queue) {
-            if (r.getRequestedBy().equalsIgnoreCase(target)) {
+        for (SongRequest r : queue) {
+            if (r.getStudentName().equalsIgnoreCase(student.trim())) {
                 count++;
             }
         }
         return count;
     }
- 
-    public synchronized List<Request> getAllRequests() {
-        return Collections.unmodifiableList(new ArrayList<>(queue));
+
+    public List<SongRequest> getRequests() {
+        return List.copyOf(queue);
     }
- 
-    public synchronized int size() {
+
+    public int size() {
         return queue.size();
     }
- 
-    public synchronized boolean isEmpty() {
+
+    public boolean isEmpty() {
         return queue.isEmpty();
     }
- 
-    public synchronized boolean isFull() {
-        return queue.size() >= maxQueueSize;
-    }
- 
-    public synchronized void clear() {
-        queue.clear();
-    }
- 
-    private static String normalize(String text) {
-        return text.trim().replaceAll("\\s+", " ");
-    }
- 
-    private static boolean isValidText(String text, int maxLength) {
-        if (text == null) {
-            return false;
-        }
-        String cleaned = normalize(text);
-        if (cleaned.isEmpty() || cleaned.length() > maxLength) {
-            return false;
-        }
-        return cleaned.chars().noneMatch(Character::isISOControl);
-    }
- 
-    public static void main(String[] args) {
-        RequestQueue rq = new RequestQueue(5, 2);
-        System.out.println(rq.addRequest("Amazing Grace", "Maria"));
-        System.out.println(rq.addRequest("  amazing   grace ", "Sam"));
-        System.out.println(rq.addRequest("", "John"));
-        System.out.println(rq.addRequest("Hallelujah", null));
-        System.out.println(rq.addRequest("Hallelujah", "Maria"));
-        System.out.println(rq.addRequest("Imagine", "Maria"));
-        System.out.println(rq.peekNext().map(Request::toString).orElse("Queue is empty"));
-        System.out.println(rq.playNext().map(Request::toString).orElse("Queue is empty"));
-        System.out.println(rq.getAllRequests());
-    }
 }
- 

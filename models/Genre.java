@@ -11,7 +11,7 @@ public enum Genre {
             return Genre.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                "Invalid genre: '" + value + "'. Valid genres: ROMANCE, POP, ROCK, HIPHOP, INDIE.");
+                    "Invalid genre: '" + value + "'. Valid genres: ROMANCE, POP, ROCK, HIPHOP, INDIE.");
         }
     }
 }
