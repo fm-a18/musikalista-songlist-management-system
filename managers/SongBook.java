@@ -36,7 +36,7 @@ public class SongBook {
         String title = DataValidation.validateText("Title");
         String artist = DataValidation.validateText("Artist");
 
-        if(songExists(title, artist)){
+        if (songExists(title, artist)) {
             System.out.println("Error: Song is already in the list.");
             return;
         }
@@ -45,15 +45,15 @@ public class SongBook {
         Song song = new Song(title, artist, genre);
         songs.add(song);
 
-        if(fileHandler.appendSong(song)){
+        if (fileHandler.appendSong(song)) {
             System.out.println("Song Successfully Added!");
         } else {
             System.out.println("Song Added but could not save to file.");
         }
     }
 
-    public void removeSong(){
-        if(songs.isEmpty()){
+    public void removeSong() {
+        if (songs.isEmpty()) {
             System.out.println("No songs found.");
             return;
         }
@@ -61,47 +61,50 @@ public class SongBook {
         int num = DataValidation.validateSongNumber();
         Song song = findBySongNumber(num);
 
-        if(song == null){
+        if (song == null) {
             System.out.println("Error: Could not find song with number: " + num + ".");
             return;
         }
 
+        if (RequestQueue.getInstance().isQueued(song)) {
+            System.out.println("Error: Song is in the request queue. Please play or clear song from list first.");
+            return;
+        }
+
         songs.remove(song);
-        if(fileHandler.saveAllSongs(songs)){
+        if (fileHandler.saveAllSongs(songs)) {
             System.out.println("Removed: " + song);
-        } else{
+        } else {
             System.out.println("Song removed but file could not be updated.");
         }
 
     }
 
     // View Song List
-    public void viewSongList(){
+    public void viewSongList() {
         DisplayUtils.songHeader("SONG LIST");
         DisplayUtils.displaySongs(songs);
     }
 
     // Searching & Sort
-
-    public void searchSongList(){
-        if(songs.isEmpty()){
+    public void searchSongList() {
+        if (songs.isEmpty()) {
             System.out.println("No songs found.");
             return;
         }
 
         boolean isDone = false;
 
-        while(!isDone){
+        while (!isDone) {
             DisplayUtils.printMenu("SEARCH SONG LIST",
                     "Title",
                     "Artist",
-                    "Genre",
                     "Song Number",
                     "#Exit",
                     "Back");
 
             int categoryChoice = DataValidation.intChoiceValidation("Select Option",
-                    1, 2, 3, 4, 5);
+                    1, 2, 3, 4);
 
             switch (categoryChoice) {
                 case 1 -> {
@@ -121,7 +124,7 @@ public class SongBook {
                     Song found = SongSearcher.searchBySongNumber(sorted, number);
                     showResults(found == null ? new ArrayList<>() : List.of(found));
                 }
-                default -> isDone = true;
+                case 4 -> isDone = true;
             }
         }
     }

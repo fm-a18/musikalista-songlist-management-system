@@ -5,8 +5,6 @@ import models.SongRequest;
 import utils.DataValidation;
 import utils.DisplayUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -17,9 +15,11 @@ public class RequestQueue {
 
     private static RequestQueue instance;
     private final Queue<SongRequest> queue = new LinkedList<>();
+    private final FileHandler fileHandler = new FileHandler();
     private SongRequest currentRequest;
 
     private RequestQueue() {
+        queue.addAll(fileHandler.readAllRequests((SongBook.getInstance().getSongs())));
     }
 
     public static RequestQueue getInstance() {
@@ -59,7 +59,11 @@ public class RequestQueue {
 
         SongRequest request = new SongRequest(student, song);
         queue.offer(request);
-        System.out.println("Request added (position " + queue.size() + "): " + request);
+        if (fileHandler.appendRequest(request)) {
+            System.out.println("Request added (position " + queue.size() + "): " + request);
+        } else {
+            System.out.println("Request added but could not save to file.");
+        }
     }
 
     // Dequeue
@@ -70,7 +74,10 @@ public class RequestQueue {
             System.out.println("No pending requests.");
             return;
         }
-        System.out.println("Now playing: " + currentRequest);
+
+        if (!fileHandler.saveAllRequests(queue)) {
+            System.out.println("Warning: could not update the request file.");
+        }
     }
 
     // View
@@ -108,7 +115,7 @@ public class RequestQueue {
     }
 
     public List<SongRequest> getRequests() {
-        return Collections.unmodifiableList(new ArrayList<>(queue));
+        return List.copyOf(queue);
     }
 
     public int size() {

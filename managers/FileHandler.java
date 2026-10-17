@@ -2,6 +2,7 @@ package managers;
 
 import models.Genre;
 import models.Song;
+import models.SongRequest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FileHandler {
@@ -158,5 +160,56 @@ public class FileHandler {
             System.out.println("Skipping invalid song line: " + line);
             return null;
         }
+    }
+
+    //Requests
+    public List<SongRequest> readAllRequests(List<Song> songs) {
+        List<SongRequest> requests = new ArrayList<>();
+        for (String line : readLines(requestsPath)) {
+            SongRequest request = parseRequest(line, songs);
+            if (request != null) requests.add(request);
+        }
+        return requests;
+    }
+
+    public boolean appendRequest(SongRequest request) {
+        return appendLine(requestsPath, formatRequest(request));
+    }
+
+    public boolean saveAllRequests(Collection<SongRequest> requests) {
+        List<String> lines = new ArrayList<>();
+        for (SongRequest r : requests) lines.add(formatRequest(r));
+        return writeLines(requestsPath, lines);
+    }
+
+    private String formatRequest(SongRequest r) {
+        return r.getRequestNumber() + DELIMITER
+                + r.getStudentName() + DELIMITER
+                + r.getSong().getSongNumber();
+    }
+
+    private SongRequest parseRequest(String line, List<Song> songs) {
+        String[] parts = line.split(SPLIT_REGEX);
+        if (parts.length != 3) {
+            System.out.println("Skipping malformed request line: " + line);
+            return null;
+        }
+
+        try {
+            int requestNumber = Integer.parseInt(parts[0].trim());
+            int songNumber = Integer.parseInt(parts[2].trim());
+
+            for (Song song : songs) {
+                if (song.getSongNumber() == songNumber) {
+                    return new SongRequest(requestNumber, parts[1].trim(), song);
+                }
+            }
+            System.out.println("Skipping request for missing song #" + songNumber + ": " + line);
+            return null;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Skipping invalid request line: " + line);
+            return null;
+        }
+
     }
 }
