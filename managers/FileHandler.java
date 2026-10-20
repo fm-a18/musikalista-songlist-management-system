@@ -213,7 +213,7 @@ public class FileHandler {
     public static int highestNumber(String fileName, int colIndex) {
         int max = 0;
         Path path = Paths.get(fileName);
-        if (!Files.notExists(path)) {
+        if (Files.notExists(path)) {
             return 0;
         }
 

@@ -5,17 +5,8 @@ public class Song {
     private String title;
     private String artist;
     private Genre genre;
-    private static int songCounter = 1;
-
-    //For newly added songs.
-    public Song(String title, String artist, Genre genre) {
-        this(songCounter, title, artist, genre);
-    }
 
     public Song(int songNumber, String title, String artist, Genre genre) {
-        if (songNumber < 1) {
-            throw new IllegalArgumentException("Song number must be positive.");
-        }
         validateTitle(title);
         validateArtist(artist);
         validateGenre(genre);
@@ -24,10 +15,6 @@ public class Song {
         this.title = title.trim();
         this.artist = artist.trim();
         this.genre = genre;
-
-        if (songNumber >= songCounter) {
-            songCounter = songNumber + 1;
-        }
     }
 
     private static void validateTitle(String title) {
@@ -62,10 +49,6 @@ public class Song {
 
     public Genre getGenre() {
         return genre;
-    }
-
-    public static int getSongCounter() {
-        return songCounter;
     }
 
     public void setTitle(String title) {

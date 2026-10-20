@@ -53,7 +53,7 @@ public class RequestQueue {
 
         if (song == null) {
             Genre genre = DataValidation.validateGenre();
-            song = songBook.addSong(findSong, songArtist, genre);
+            song = songBook.addSong(songTitle, songArtist, genre);
         } else if (isQueued(song)) {
             System.out.println("Error: That song is already in the queue.");
             return;
