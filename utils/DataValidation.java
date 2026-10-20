@@ -55,17 +55,33 @@ public class DataValidation {
 
     public static Genre validateGenre() {
         Genre[] genres = Genre.values();
+        DisplayUtils.printMenu("GENRE",
+                "ROMANCE",
+                "POP",
+                "ROCK",
+                "HIPHOP",
+                "INDIE");
 
-        for (int i = 0; i < genres.length; i++) {
-            System.out.printf(" [%d] %s%n", i + 1, genres[i]);
-        }
-
-        int choice = validateInt("Genre", 1, genres.length);
-        return genres[choice - 1];
+        int genreChoice = intChoiceValidation("Select Genre",1, 2, 3, 4, 5);
+        return genres[genreChoice - 1];
     }
 
     public static int validateSongNumber() {
-        return validateInt("Song Number", 1, 999999); //Subject to change
+        int value = 0;
+        boolean isValidated = false;
+
+        while (!isValidated) {
+            System.out.print("Song Number: ");
+            String input = sc.nextLine().trim();
+
+            if (!input.matches("\\d{5}")) {
+                System.out.println("Error: Please enter a 5-digit song number.");
+            } else {
+                value = Integer.parseInt(input);
+                isValidated = true;
+            }
+        }
+        return value;
     }
 
     public static int validateInt(String prompt, int min, int max) {

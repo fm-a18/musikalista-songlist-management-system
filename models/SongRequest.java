@@ -12,12 +12,12 @@ public class SongRequest {
 
     public SongRequest(int requestNumber, String studentName, Song song) {
         if (requestNumber < 1) {
-            throw new IllegalArgumentException("Song number must be positive.");
+            throw new IllegalArgumentException("Request number must be positive.");
         }
         validateStudentName(studentName);
         validateSong(song);
 
-        this.requestNumber = requestCounter++;
+        this.requestNumber = requestNumber;
         this.studentName = studentName.trim();
         this.song = song;
 

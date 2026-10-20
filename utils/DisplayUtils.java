@@ -36,7 +36,7 @@ public class DisplayUtils {
 
     public static void displaySongs(Collection<Song> songs) {
         if (songs.isEmpty()) {
-            System.out.println("No songs available!");
+            System.out.println("No songs available.");
             System.out.println("-".repeat(TABLE_WIDTH));
             return;
         }
@@ -44,7 +44,7 @@ public class DisplayUtils {
         for (Song song : songs) {
             System.out.printf(
                     SONG_FORMAT,
-                    song.getSongNumber(),
+                    String.format("%05d", song.getSongNumber()),   // was song.getSongNumber(),
                     fit(song.getTitle(), 28),
                     fit(song.getArtist(), 22),
                     song.getGenre()
@@ -55,7 +55,7 @@ public class DisplayUtils {
 
     public static void displayRequests(Collection<SongRequest> requests) {
         if (requests.isEmpty()) {
-            System.out.println("No pending requests!");
+            System.out.println("No pending requests");
             System.out.println("-".repeat(TABLE_WIDTH));
             return;
         }
