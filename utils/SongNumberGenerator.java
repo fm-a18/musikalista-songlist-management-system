@@ -2,7 +2,7 @@ package utils;
 
 public class SongNumberGenerator {
     private static final int MAX_SONG_NUMBER = 99999;
-    private static int ctr = 0;
+    private static int ctr = -1;
     private static boolean isSeeded = false;
 
 

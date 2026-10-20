@@ -66,6 +66,10 @@ public class Song {
         this.genre = genre;
     }
 
+    public String getFormattedNumber() {
+        return String.format("%05d", songNumber);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,6 +84,5 @@ public class Song {
 
     @Override
     public String toString() {
-        return "Song #" + songNumber + ": \"" + title + "\" by " + artist + " [" + genre + "]";
-    }
+        return "Song #" + String.format("%05d", songNumber) + ": \"" + title + "\" by " + artist + " [" + genre + "]";    }
 }

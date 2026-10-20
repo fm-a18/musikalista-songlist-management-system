@@ -134,7 +134,7 @@ public class FileHandler {
     }
 
     private String formatSong(Song s) {
-        return s.getSongNumber() + DELIMITER
+        return String.format("%05d", s.getSongNumber()) + DELIMITER
                 + clean(s.getTitle()) + DELIMITER
                 + clean(s.getArtist()) + DELIMITER
                 + s.getGenre().name();
@@ -211,10 +211,10 @@ public class FileHandler {
     }
 
     public static int highestNumber(String fileName, int colIndex) {
-        int max = 0;
+        int max = -1;
         Path path = Paths.get(fileName);
         if (Files.notExists(path)) {
-            return 0;
+            return -1;
         }
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {

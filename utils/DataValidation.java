@@ -62,7 +62,7 @@ public class DataValidation {
                 "HIPHOP",
                 "INDIE");
 
-        int genreChoice = intChoiceValidation("Enter Genre",1, 2, 3, 4, 5);
+        int genreChoice = intChoiceValidation("Select Genre",1, 2, 3, 4, 5);
         return genres[genreChoice - 1];
     }
 

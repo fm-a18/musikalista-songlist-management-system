@@ -37,11 +37,10 @@ public class SongBook {
         Song song = new Song(SongNumberGenerator.songNumberGenerator(), title, artist, genre);
         songs.add(song);
 
-        if (fileHandler.appendSong(song)) {
-            System.out.println("Song successfully added: " + song);
-        } else {
+        if (!fileHandler.appendSong(song)) {
             System.out.println("Song added but could not save to file.");
         }
+
         return song;
     }
 
@@ -61,6 +60,11 @@ public class SongBook {
 
     // View Song List
     public void viewSongList() {
+        if (songs.isEmpty()) {
+            System.out.println("No songs available.");
+            return;
+        }
+
         DisplayUtils.songHeader("SONG LIST");
         DisplayUtils.displaySongs(songs);
     }
@@ -136,7 +140,10 @@ public class SongBook {
             comparator = comparator.reversed();
         }
 
-        DisplayUtils.songHeader("SORTED SONG LIST");
+        String[] fieldNames = {"TITLE", "ARTIST", "GENRE"};
+        String direction = (order == 1) ? "ASC" : "DESC";
+
+        DisplayUtils.songHeader("SORTED BY " + fieldNames[field - 1] + " (" + direction + ")");
         DisplayUtils.displaySongs(SongSorter.mergeSort(songs, comparator));
     }
 
@@ -154,6 +161,11 @@ public class SongBook {
     }
 
     private void showResults(List<Song> results) {
+        if (results.isEmpty()) {
+            System.out.println("No songs found.");
+            return;
+        }
+
         DisplayUtils.songHeader("SEARCH RESULTS");
         DisplayUtils.displaySongs(results);
     }

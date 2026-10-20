@@ -44,10 +44,7 @@ public class Main {
             switch (selectOption) {
                 case 1 -> requestQueue.addRequest();
                 case 2 -> requestQueue.viewCurrentSong();
-                case 3 -> {
-                    requestQueue.playNext();
-                    requestQueue.viewCurrentSong();
-                }
+                case 3 -> requestQueue.playNext();
                 case 4 -> requestQueue.viewRequests();
                 case 5 -> songBook.viewSongList();
                 case 6 -> songBook.searchSongList();
