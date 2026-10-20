@@ -1,4 +1,4 @@
-# 🎵 MUSIKALIST: Songlist Management System
+# MUSIKALIST: Songlist Management System for Musikalista
 
 **Data Structures and Algorithms Final Project (Group 5)**
 A console-based song request system for **Musikalista**, the music organization of De La Salle Lipa.
@@ -158,11 +158,11 @@ Select Option:
 
 | Member | Responsibilities |
 |---|---|
-| **Rhoda** | `Main` (main menu and program flow) |
-| **France** | `utils`: `DataValidation`, `DisplayUtils`<br>`managers`: `RequestQueue`, `SongBook`<br>`algorithms`: `SongSearcher`, `SongSorter` |
-| **Lance** | `models`: `Genre`, `Song`, `SongRequest` |
-| **Axel** | `managers`: `FileHandler` |
-| **Shanisse** | `comparators`: `ArtistComparator`, `GenreComparator`, `TitleComparator` |
+| **Dapito** | `Main` (main menu and program flow) |
+| **Alcala** | `utils`: `DataValidation`, `DisplayUtils`<br>`managers`: `RequestQueue`, `SongBook`<br>`algorithms`: `SongSearcher`, `SongSorter` |
+| **Maputi** | `models`: `Genre`, `Song`, `SongRequest` |
+| **Pateña** | `managers`: `FileHandler` |
+| **De Luna** | `comparators`: `ArtistComparator`, `GenreComparator`, `TitleComparator` |
 
 ---
 
