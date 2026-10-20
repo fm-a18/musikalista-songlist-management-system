@@ -26,7 +26,7 @@ public class Main {
         while (isRunning) {
             DisplayUtils.printMenu("WELCOME, RAKS!",
                     "#Requests",
-                    "Add New Song",                         // 1 (Enqueue)
+                    "Request Song",                         // 1 (Enqueue)
                     "View Current Song Playing",            // 2 (Peek)
                     "Play Next Requested Song",             // 3 (Dequeue, FIFO)
                     "View Requests",                        // 4

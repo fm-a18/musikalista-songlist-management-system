@@ -4,9 +4,7 @@ import models.Genre;
 import models.Song;
 import models.SongRequest;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,13 +15,13 @@ import java.util.List;
 
 public class FileHandler {
 
-    private static final String SONGS_FILE = "SONG_LIST.txt";
-    private static final String REQUESTS_FILE = "REQUEST_LIST.txt";
-    private static final String DELIMITER = "|";
-    private static final String SPLIT_REGEX = "\\|";
+    public static final String SONGS_FILE = "SONG_LIST.txt";
+    public static final String REQUESTS_FILE = "REQUEST_LIST.txt";
+    public static final String DELIMITER = "|";
+    public static final String SPLIT_REGEX = "\\|";
 
-    private final Path songsPath = Paths.get(SONGS_FILE);
-    private final Path requestsPath = Paths.get(REQUESTS_FILE);
+    public final Path songsPath = Paths.get(SONGS_FILE);
+    public final Path requestsPath = Paths.get(REQUESTS_FILE);
 
     public FileHandler() {
         createIfMissing(songsPath);
@@ -210,6 +208,30 @@ public class FileHandler {
             System.out.println("Skipping invalid request line: " + line);
             return null;
         }
+    }
 
+    public static int highestNumber(String fileName, int colIndex) {
+        int max = 0;
+        Path path = Paths.get(fileName);
+        if (!Files.notExists(path)) {
+            return 0;
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(SPLIT_REGEX, -1);
+                if (parts.length > colIndex) {
+                    try {
+                        max = Math.max(max, Integer.parseInt(parts[colIndex].trim()));
+                    } catch (NumberFormatException e) {
+                        // skip IDs that don't end in a number
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error in reading " + fileName + ".");
+        }
+        return max;
     }
 }

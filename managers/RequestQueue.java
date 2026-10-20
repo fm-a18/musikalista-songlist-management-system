@@ -1,5 +1,6 @@
 package managers;
 
+import models.Genre;
 import models.Song;
 import models.SongRequest;
 import utils.DataValidation;
@@ -44,21 +45,25 @@ public class RequestQueue {
             return;
         }
 
-        int number = DataValidation.validateSongNumber();
-        Song song = SongBook.getInstance().findBySongNumber(number);
+        String songTitle = utils.DataValidation.validateText("Enter Song Title");
+        String songArtist = utils.DataValidation.validateText("Enter Artist Name");
+        SongBook songBook = SongBook.getInstance();
+
+        Song song = songBook.findSong(songTitle, songArtist);
 
         if (song == null) {
-            System.out.println("Error: No song with number " + number + ".");
-            return;
-        }
-
-        if (isQueued(song)) {
+            Genre genre = DataValidation.validateGenre();
+            song = songBook.addSong(findSong, songArtist, genre);
+        } else if (isQueued(song)) {
             System.out.println("Error: That song is already in the queue.");
             return;
+        } else {
+            System.out.println("Song found in list: " + song);
         }
 
         SongRequest request = new SongRequest(student, song);
         queue.offer(request);
+
         if (fileHandler.appendRequest(request)) {
             System.out.println("Request added (position " + queue.size() + "): " + request);
         } else {
