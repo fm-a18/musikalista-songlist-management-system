@@ -65,7 +65,30 @@ public class DataValidation {
     }
 
     public static int validateSongNumber() {
-        return validateInt("Song Number", 1, 999999); //Subject to change
+        int value = 0;
+        boolean isValidated = false;
+
+        while (!isValidated) {
+            System.out.print("Song Number: ");
+            String input = sc.nextLine().trim();
+
+            if (!input.matches("\\d{5}")) {
+                System.out.println("Error: Please enter a 5-digit song number.");
+                continue;
+            }
+
+            try {
+                value = Integer.parseInt(input);
+                if (!input.matches("\\d{5}")) { //To fix
+                    System.out.println("Error: Please enter a 5-digit song number.");
+                } else {
+                    isValidated = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a 5-digit song number.");
+            }
+        }
+        return value;
     }
 
     public static int validateInt(String prompt, int min, int max) {
