@@ -44,7 +44,7 @@ public class DisplayUtils {
         for (Song song : songs) {
             System.out.printf(
                     SONG_FORMAT,
-                    String.format("%05d", song.getSongNumber()),   // was song.getSongNumber(),
+                    String.format("%05d", song.getSongNumber()),
                     fit(song.getTitle(), 28),
                     fit(song.getArtist(), 22),
                     song.getGenre()

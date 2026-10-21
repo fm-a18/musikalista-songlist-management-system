@@ -8,13 +8,24 @@ public class DataValidation {
     private static final Scanner sc = new Scanner(System.in);
     private static final int MAX_TEXT_LENGTH = 50;
 
+    private static String readLine() {
+        try {
+            return sc.nextLine();
+        } catch (java.util.NoSuchElementException e) {
+            System.out.println();
+            System.out.println("Input closed. Exiting program.");
+            System.exit(0);
+            return "";
+        }
+    }
+
     public static String validateText(String prompt) {
         boolean isValidated = false;
         String input = "";
 
         while (!isValidated) {
             System.out.print(prompt + ": ");
-            input = sc.nextLine().trim();
+            input = readLine().trim();
 
             if (input.isEmpty()) {
                 System.out.printf("Error: %s cannot be empty.%n", prompt);
@@ -35,12 +46,7 @@ public class DataValidation {
 
         while (!isValidated) {
             System.out.print("Student Name: ");
-            try {
-                input = sc.nextLine().trim();
-            } catch (java.util.NoSuchElementException e) {
-                System.out.println("Error: No input available. Please try again.");
-                continue;
-            }
+            input = readLine().trim();
 
             if (input.isEmpty()) {
                 System.out.println("Error: Student Name cannot be empty.");
@@ -72,7 +78,7 @@ public class DataValidation {
 
         while (!isValidated) {
             System.out.print("Song Number: ");
-            String input = sc.nextLine().trim();
+            String input = readLine().trim();
 
             if (!input.matches("\\d{5}")) {
                 System.out.println("Error: Please enter a 5-digit song number.");
@@ -90,7 +96,7 @@ public class DataValidation {
 
         while (!isValidated) {
             System.out.print(prompt + ": ");
-            String input = sc.nextLine().trim();
+            String input = readLine().trim();
 
             if (!input.matches("\\d+")) {
                 System.out.printf("Error: Please enter a whole number from %d to %d.%n", min, max);
@@ -116,7 +122,7 @@ public class DataValidation {
         boolean isValidated = false;
         while (!isValidated) {
             System.out.print(prompt + ": ");
-            String input = sc.nextLine().trim();
+            String input = readLine().trim();
 
             if (!input.matches("[1-9][0-9]*")) {
                 printValidChoices(choices);
@@ -144,7 +150,7 @@ public class DataValidation {
         return value;
     }
 
-    public static void printValidChoices(int... choices) { //int values
+    public static void printValidChoices(int... choices) {
         System.out.print("Error: Please select only from (");
         for (int i = 0; i < choices.length; i++) {
             System.out.print(choices[i]);
