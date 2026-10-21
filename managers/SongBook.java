@@ -32,6 +32,7 @@ public class SongBook {
         return instance;
     }
 
+    // Add / Remove Songs
     public Song addSong(String title, String artist, Genre genre) {
         Song song = new Song(SongNumberGenerator.songNumberGenerator(), title, artist, genre);
         songs.add(song);
@@ -57,6 +58,7 @@ public class SongBook {
         return findSong(title, artist) != null;
     }
 
+    // View Song List
     public void viewSongList() {
         if (songs.isEmpty()) {
             System.out.println("No songs available.");
@@ -67,6 +69,7 @@ public class SongBook {
         DisplayUtils.displaySongs(songs);
     }
 
+    // Searching & Sort
     public void searchSongList() {
         if (songs.isEmpty()) {
             System.out.println("No songs found.");
