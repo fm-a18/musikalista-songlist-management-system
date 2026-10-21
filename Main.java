@@ -29,6 +29,10 @@ public class Main {
                     "View Current Song Playing",
                     "Play Next Requested Song",
                     "View Requests",
+                    "Add New Song",                         // 1 (Enqueue)
+                    "View Current Song Playing",            // 2 (Peek)
+                    "Play Next Requested Song",             // 3 (Dequeue, FIFO)
+                    "View Requests",                        // 4
                     "#Song List",
                     "View Song List",
                     "Search Song List",
@@ -43,7 +47,10 @@ public class Main {
             switch (selectOption) {
                 case 1 -> requestQueue.addRequest();
                 case 2 -> requestQueue.viewCurrentSong();
-                case 3 -> requestQueue.playNext();
+                case 3 -> {
+                    requestQueue.playNext();
+                    requestQueue.viewCurrentSong();
+                }
                 case 4 -> requestQueue.viewRequests();
                 case 5 -> songBook.viewSongList();
                 case 6 -> songBook.searchSongList();

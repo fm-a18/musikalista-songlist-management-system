@@ -30,6 +30,18 @@ A console-based song request system for **Musikalista**, the music organization 
 
 ### Main Menu
 
+<<<<<<< HEAD
+| # | Option | Description | Concept |
+|---|---|---|---|
+| 1 | **Add New Song** | Records a student's song request and adds it to the end of the queue | Enqueue |
+| 2 | **View Current Song Playing** | Shows the song that is currently playing | Peek |
+| 3 | **Play Next Requested Song** | Removes the oldest request from the queue and plays it | Dequeue (FIFO) |
+| 4 | **View Requests** | Displays all pending requests in order | Queue traversal |
+| 5 | **View Song List** | Displays every song in the song book | SongList |
+| 6 | **Search Song List** | Search by **Title**, **Artist**, or **Song Number** | Binary Search |
+| 7 | **Sort Song List** | Sort by **Title**, **Artist**, or **Genre** (ascending or descending) | Merge Sort |
+| 8 | **Exit** | Closes the program | n/a |
+=======
 | # | Option                        | Description | Concept |
 |---|-------------------------------|---|---|
 | 1 | **Request Song**              | Records a student's song request and adds it to the end of the queue | Enqueue |
@@ -40,6 +52,7 @@ A console-based song request system for **Musikalista**, the music organization 
 | 6 | **Search Song List**          | Search by **Title**, **Artist**, or **Song Number** | Binary Search |
 | 7 | **Sort Song List**            | Sort by **Title**, **Artist**, or **Genre** (ascending or descending) | Merge Sort |
 | 8 | **Exit**                      | Closes the program | n/a |
+>>>>>>> origin/master
 
 ### Song Information
 
