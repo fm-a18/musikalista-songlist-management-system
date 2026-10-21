@@ -9,6 +9,7 @@ import models.Genre;
 import models.Song;
 import utils.DataValidation;
 import utils.DisplayUtils;
+import utils.SongNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,56 +33,38 @@ public class SongBook {
     }
 
     // Add / Remove Songs
-    public void addSong() {
-        String title = DataValidation.validateText("Title");
-        String artist = DataValidation.validateText("Artist");
-
-        if (songExists(title, artist)) {
-            System.out.println("Error: Song is already in the list.");
-            return;
-        }
-
-        Genre genre = DataValidation.validateGenre();
-        Song song = new Song(title, artist, genre);
+    public Song addSong(String title, String artist, Genre genre) {
+        Song song = new Song(SongNumberGenerator.songNumberGenerator(), title, artist, genre);
         songs.add(song);
 
-        if (fileHandler.appendSong(song)) {
-            System.out.println("Song Successfully Added!");
-        } else {
-            System.out.println("Song Added but could not save to file.");
+        if (!fileHandler.appendSong(song)) {
+            System.out.println("Song added but could not save to file.");
         }
+
+        return song;
     }
 
-    public void removeSong() {
-        if (songs.isEmpty()) {
-            System.out.println("No songs found.");
-            return;
+    public Song findSong(String title, String artist) {
+        for (Song song : songs) {
+            if (song.getTitle().equalsIgnoreCase(title.trim())
+                    && song.getArtist().equalsIgnoreCase(artist.trim())) {
+                return song;
+            }
         }
+        return null;
+    }
 
-        int num = DataValidation.validateSongNumber();
-        Song song = findBySongNumber(num);
-
-        if (song == null) {
-            System.out.println("Error: Could not find song with number: " + num + ".");
-            return;
-        }
-
-        if (RequestQueue.getInstance().isQueued(song)) {
-            System.out.println("Error: Song is in the request queue. Please play or clear song from list first.");
-            return;
-        }
-
-        songs.remove(song);
-        if (fileHandler.saveAllSongs(songs)) {
-            System.out.println("Removed: " + song);
-        } else {
-            System.out.println("Song removed but file could not be updated.");
-        }
-
+    public boolean songExists(String title, String artist) {
+        return findSong(title, artist) != null;
     }
 
     // View Song List
     public void viewSongList() {
+        if (songs.isEmpty()) {
+            System.out.println("No songs available.");
+            return;
+        }
+
         DisplayUtils.songHeader("SONG LIST");
         DisplayUtils.displaySongs(songs);
     }
@@ -157,18 +140,11 @@ public class SongBook {
             comparator = comparator.reversed();
         }
 
-        DisplayUtils.songHeader("SORTED SONG LIST");
-        DisplayUtils.displaySongs(SongSorter.mergeSort(songs, comparator));
-    }
+        String[] fieldNames = {"TITLE", "ARTIST", "GENRE"};
+        String direction = (order == 1) ? "ASC" : "DESC";
 
-    public boolean songExists(String title, String artist) {
-        for (Song song : songs) {
-            if (song.getTitle().equalsIgnoreCase(title.trim())
-                    && song.getArtist().equalsIgnoreCase(artist.trim())) {
-                return true;
-            }
-        }
-        return false;
+        DisplayUtils.songHeader("SORTED BY " + fieldNames[field - 1] + " (" + direction + ")");
+        DisplayUtils.displaySongs(SongSorter.mergeSort(songs, comparator));
     }
 
     public Song findBySongNumber(int number) {
@@ -185,6 +161,11 @@ public class SongBook {
     }
 
     private void showResults(List<Song> results) {
+        if (results.isEmpty()) {
+            System.out.println("No songs found.");
+            return;
+        }
+
         DisplayUtils.songHeader("SEARCH RESULTS");
         DisplayUtils.displaySongs(results);
     }

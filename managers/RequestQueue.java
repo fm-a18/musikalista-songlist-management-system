@@ -1,5 +1,6 @@
 package managers;
 
+import models.Genre;
 import models.Song;
 import models.SongRequest;
 import utils.DataValidation;
@@ -44,13 +45,7 @@ public class RequestQueue {
             return;
         }
 
-        int number = DataValidation.validateSongNumber();
-        Song song = SongBook.getInstance().findBySongNumber(number);
-
-        if (song == null) {
-            System.out.println("Error: No song with number " + number + ".");
-            return;
-        }
+        Song song = promptForSong();
 
         if (isQueued(song)) {
             System.out.println("Error: That song is already in the queue.");
@@ -59,11 +54,39 @@ public class RequestQueue {
 
         SongRequest request = new SongRequest(student, song);
         queue.offer(request);
-        if (fileHandler.appendRequest(request)) {
-            System.out.println("Request added (position " + queue.size() + "): " + request);
-        } else {
-            System.out.println("Request added but could not save to file.");
+
+        boolean saved = fileHandler.appendRequest(request);
+        showRequestAdded(request);
+
+        if (!saved) {
+            System.out.println("Warning: could not save to file.");
         }
+    }
+
+    private Song promptForSong() {
+        String title = DataValidation.validateText("Song Title");
+        String artist = DataValidation.validateText("Artist Name");
+
+        SongBook songBook = SongBook.getInstance();
+        Song song = songBook.findSong(title, artist);
+
+        if (song == null) {
+            Genre genre = DataValidation.validateGenre();
+            song = songBook.addSong(title, artist, genre);
+        }
+        return song;
+    }
+
+    private void showRequestAdded(SongRequest request) {
+        Song song = request.getSong();
+
+        DisplayUtils.printSummaryBox("REQUEST ADDED", new String[][]{
+                {"Position", String.valueOf(queue.size())},
+                {"Student", request.getStudentName()},
+                {"Title", song.getTitle()},
+                {"Artist", song.getArtist()},
+                {"Song No", song.getFormattedNumber()}
+        });
     }
 
     // Dequeue
@@ -71,13 +94,14 @@ public class RequestQueue {
         currentRequest = queue.poll();
 
         if (currentRequest == null) {
-            System.out.println("No pending requests.");
+            System.out.println("No pending requests. Nothing is playing now.");
             return;
         }
 
         if (!fileHandler.saveAllRequests(queue)) {
             System.out.println("Warning: could not update the request file.");
         }
+        viewCurrentSong();
     }
 
     // View
@@ -87,10 +111,23 @@ public class RequestQueue {
             System.out.println("Nothing is playing right now.");
             return;
         }
-        System.out.println("Now playing: " + currentRequest);
+        Song song = currentRequest.getSong();
+        DisplayUtils.printSummaryBox("NOW PLAYING", new String[][]{
+                {"Title", song.getTitle()},
+                {"Artist", song.getArtist()},
+                {"Genre", song.getGenre().toString()},
+                {"Requested By", currentRequest.getStudentName()},
+                {"Request No", String.valueOf(currentRequest.getRequestNumber())},
+                {"Song No", song.getFormattedNumber()}
+        });
     }
 
     public void viewRequests() {
+        if (queue.isEmpty()) {
+            System.out.println("No pending requests.");
+            return;
+        }
+
         DisplayUtils.requestHeader("REQUEST QUEUE");
         DisplayUtils.displayRequests(queue);
     }
