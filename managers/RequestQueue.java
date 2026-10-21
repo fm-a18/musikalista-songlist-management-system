@@ -30,6 +30,7 @@ public class RequestQueue {
         return instance;
     }
 
+    // Enqueue
     public void addRequest() {
         if (queue.size() >= MAX_QUEUE_SIZE) {
             System.out.println("Error: The request queue is full.");
@@ -88,6 +89,7 @@ public class RequestQueue {
         });
     }
 
+    // Dequeue
     public void playNext() {
         currentRequest = queue.poll();
 
@@ -102,7 +104,9 @@ public class RequestQueue {
         viewCurrentSong();
     }
 
+    // View
 
+    // Peek: look at the next request without removing it
     public SongRequest peekNext() {
         return queue.peek();
     }

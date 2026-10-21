@@ -1,3 +1,4 @@
+// Group 5
 
 import managers.RequestQueue;
 import managers.SongBook;
@@ -25,20 +26,16 @@ public class Main {
         while (isRunning) {
             DisplayUtils.printMenu("WELCOME, RAKS!",
                     "#Requests",
-                    "Request Song",
-                    "View Current Song Playing",
-                    "Play Next Requested Song",
-                    "View Requests",
                     "Add New Song",                         // 1 (Enqueue)
                     "View Current Song Playing",            // 2 (Peek)
                     "Play Next Requested Song",             // 3 (Dequeue, FIFO)
                     "View Requests",                        // 4
                     "#Song List",
-                    "View Song List",
-                    "Search Song List",
-                    "Sort Song List",
+                    "View Song List",                       // 5
+                    "Search Song List",                     // 6
+                    "Sort Song List",                       // 7
                     "#Close Program",
-                    "Exit");
+                    "Exit");                                // 8
 
             int selectOption = DataValidation.intChoiceValidation("Select Option",
                     1, 2, 3, 4, 5, 6, 7, 8);
@@ -84,7 +81,7 @@ public class Main {
         String line = "=".repeat(DisplayUtils.MENU_WIDTH);
 
         System.out.println(line);
-        System.out.println(centered("Thank you for using Musikalist!", DisplayUtils.MENU_WIDTH));
+        System.out.println(centered("Thank you for using MusikaList!", DisplayUtils.MENU_WIDTH));
         System.out.println(centered("Keep the music playing. Goodbye!", DisplayUtils.MENU_WIDTH));
         System.out.println(line);
     }
