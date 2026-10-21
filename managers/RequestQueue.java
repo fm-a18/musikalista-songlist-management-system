@@ -30,7 +30,6 @@ public class RequestQueue {
         return instance;
     }
 
-    // Enqueue
     public void addRequest() {
         if (queue.size() >= MAX_QUEUE_SIZE) {
             System.out.println("Error: The request queue is full.");
@@ -89,7 +88,6 @@ public class RequestQueue {
         });
     }
 
-    // Dequeue
     public void playNext() {
         currentRequest = queue.poll();
 
@@ -104,22 +102,33 @@ public class RequestQueue {
         viewCurrentSong();
     }
 
-    // View
+
+    public SongRequest peekNext() {
+        return queue.peek();
+    }
 
     public void viewCurrentSong() {
         if (currentRequest == null) {
             System.out.println("Nothing is playing right now.");
-            return;
+        } else {
+            Song song = currentRequest.getSong();
+            DisplayUtils.printSummaryBox("NOW PLAYING", new String[][]{
+                    {"Title", song.getTitle()},
+                    {"Artist", song.getArtist()},
+                    {"Genre", song.getGenre().toString()},
+                    {"Requested By", currentRequest.getStudentName()},
+                    {"Request No", String.valueOf(currentRequest.getRequestNumber())},
+                    {"Song No", song.getFormattedNumber()}
+            });
         }
-        Song song = currentRequest.getSong();
-        DisplayUtils.printSummaryBox("NOW PLAYING", new String[][]{
-                {"Title", song.getTitle()},
-                {"Artist", song.getArtist()},
-                {"Genre", song.getGenre().toString()},
-                {"Requested By", currentRequest.getStudentName()},
-                {"Request No", String.valueOf(currentRequest.getRequestNumber())},
-                {"Song No", song.getFormattedNumber()}
-        });
+
+        SongRequest next = peekNext();
+        if (next == null) {
+            System.out.println("Up next: (queue is empty)");
+        } else {
+            System.out.println("Up next: \"" + next.getSong().getTitle() + "\" by "
+                    + next.getSong().getArtist() + " (requested by " + next.getStudentName() + ")");
+        }
     }
 
     public void viewRequests() {

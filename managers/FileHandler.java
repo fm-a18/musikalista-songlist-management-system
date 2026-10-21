@@ -160,7 +160,6 @@ public class FileHandler {
         }
     }
 
-    //Requests
     public List<SongRequest> readAllRequests(List<Song> songs) {
         List<SongRequest> requests = new ArrayList<>();
         for (String line : readLines(requestsPath)) {
@@ -225,7 +224,6 @@ public class FileHandler {
                     try {
                         max = Math.max(max, Integer.parseInt(parts[colIndex].trim()));
                     } catch (NumberFormatException e) {
-                        // skip IDs that don't end in a number
                     }
                 }
             }

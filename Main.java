@@ -1,4 +1,3 @@
-//Group 5
 
 import managers.RequestQueue;
 import managers.SongBook;
@@ -26,20 +25,20 @@ public class Main {
         while (isRunning) {
             DisplayUtils.printMenu("WELCOME, RAKS!",
                     "#Requests",
-<<<<<<< HEAD
+                    "Request Song",
+                    "View Current Song Playing",
+                    "Play Next Requested Song",
+                    "View Requests",
                     "Add New Song",                         // 1 (Enqueue)
-=======
-                    "Request Song",                         // 1 (Enqueue)
->>>>>>> origin/master
                     "View Current Song Playing",            // 2 (Peek)
                     "Play Next Requested Song",             // 3 (Dequeue, FIFO)
                     "View Requests",                        // 4
                     "#Song List",
-                    "View Song List",                       // 5
-                    "Search Song List",                     // 6
-                    "Sort Song List",                       // 7
+                    "View Song List",
+                    "Search Song List",
+                    "Sort Song List",
                     "#Close Program",
-                    "Exit");                                // 8
+                    "Exit");
 
             int selectOption = DataValidation.intChoiceValidation("Select Option",
                     1, 2, 3, 4, 5, 6, 7, 8);
@@ -48,14 +47,10 @@ public class Main {
             switch (selectOption) {
                 case 1 -> requestQueue.addRequest();
                 case 2 -> requestQueue.viewCurrentSong();
-<<<<<<< HEAD
                 case 3 -> {
                     requestQueue.playNext();
                     requestQueue.viewCurrentSong();
                 }
-=======
-                case 3 -> requestQueue.playNext();
->>>>>>> origin/master
                 case 4 -> requestQueue.viewRequests();
                 case 5 -> songBook.viewSongList();
                 case 6 -> songBook.searchSongList();
