@@ -81,7 +81,7 @@ public class Main {
         String line = "=".repeat(DisplayUtils.MENU_WIDTH);
 
         System.out.println(line);
-        System.out.println(centered("Thank you for using Musikalist!", DisplayUtils.MENU_WIDTH));
+        System.out.println(centered("Thank you for using MusikaList!", DisplayUtils.MENU_WIDTH));
         System.out.println(centered("Keep the music playing. Goodbye!", DisplayUtils.MENU_WIDTH));
         System.out.println(line);
     }
