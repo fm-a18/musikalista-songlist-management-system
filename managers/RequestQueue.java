@@ -91,12 +91,14 @@ public class RequestQueue {
 
     // Dequeue
     public void playNext() {
-        currentRequest = queue.poll();
+        SongRequest next = queue.poll();
 
-        if (currentRequest == null) {
-            System.out.println("No pending requests. Nothing is playing now.");
+        if (next == null) {
+            System.out.println("No pending requests to play.");
             return;
         }
+
+        currentRequest = next;
 
         if (!fileHandler.saveAllRequests(queue)) {
             System.out.println("Warning: could not update the request file.");
