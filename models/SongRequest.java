@@ -2,7 +2,7 @@ package models;
 
 public class SongRequest {
     private final int requestNumber;
-    private String studentName;
+    private final String studentName;
     private Song song;
     private static int requestCounter = 1;
 
@@ -52,15 +52,6 @@ public class SongRequest {
 
     public Song getSong() {
         return song;
-    }
-
-    public static int getRequestCounter() {
-        return requestCounter;
-    }
-
-    public void setStudentName(String studentName) {
-        validateStudentName(studentName);
-        this.studentName = studentName.trim();
     }
 
     public void setSong(Song song) {

@@ -41,53 +41,6 @@ public class FileHandler {
         return appendLine(songsPath, formatSong(song));
     }
 
-    public int getNextSongNumber() {
-        int max = 0;
-        for (Song s : readAllSongs()) {
-            if (s.getSongNumber() > max) max = s.getSongNumber();
-        }
-        return max + 1;
-    }
-
-    public boolean updateSong(Song updated) {
-        List<Song> songs = readAllSongs();
-        for (int i = 0; i < songs.size(); i++) {
-            if (songs.get(i).getSongNumber() == updated.getSongNumber()) {
-                songs.set(i, updated);
-                return saveAllSongs(songs);
-            }
-        }
-        return false;
-    }
-
-    public boolean saveAllSongs(List<Song> songs) {
-        List<String> lines = new ArrayList<>();
-        for (Song s : songs) lines.add(formatSong(s));
-        return writeLines(songsPath, lines);
-    }
-
-    public List<Integer> readRequestQueue() {
-        List<Integer> numbers = new ArrayList<>();
-        for (String line : readLines(requestsPath)) {
-            try {
-                numbers.add(Integer.parseInt(line.trim()));
-            } catch (NumberFormatException e) {
-                System.out.println("Skipping invalid request line: " + line);
-            }
-        }
-        return numbers;
-    }
-
-    public boolean appendRequest(int songNumber) {
-        return appendLine(requestsPath, String.valueOf(songNumber));
-    }
-
-    public boolean saveRequestQueue(List<Integer> songNumbers) {
-        List<String> lines = new ArrayList<>();
-        for (int n : songNumbers) lines.add(String.valueOf(n));
-        return writeLines(requestsPath, lines);
-    }
-
     private void createIfMissing(Path path) {
         try {
             if (Files.notExists(path)) Files.createFile(path);
