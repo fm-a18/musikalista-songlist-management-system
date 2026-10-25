@@ -20,8 +20,13 @@ public class FileHandler {
     public static final String DELIMITER = "|";
     public static final String SPLIT_REGEX = "\\|";
 
-    public final Path songsPath = Paths.get(SONGS_FILE);
-    public final Path requestsPath = Paths.get(REQUESTS_FILE);
+    private static final Path PROJECT_DIR = Paths.get("").toAbsolutePath().normalize();
+
+    public static final Path SONGS_PATH = PROJECT_DIR.resolve(SONGS_FILE);
+    public static final Path REQUESTS_PATH = PROJECT_DIR.resolve(REQUESTS_FILE);
+
+    public final Path songsPath = SONGS_PATH;
+    public final Path requestsPath = REQUESTS_PATH;
 
     public FileHandler() {
         createIfMissing(songsPath);
