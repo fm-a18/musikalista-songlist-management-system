@@ -141,7 +141,7 @@ public class FileHandler {
     private String formatRequest(SongRequest r) {
         return r.getRequestNumber() + DELIMITER
                 + r.getStudentName() + DELIMITER
-                + r.getSong().getSongNumber();
+                + String.format("%05d", r.getSong().getSongNumber());
     }
 
     private SongRequest parseRequest(String line, List<Song> songs) {
