@@ -7,7 +7,6 @@ import utils.DataValidation;
 import utils.DisplayUtils;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class RequestQueue {
@@ -166,15 +165,8 @@ public class RequestQueue {
         return count;
     }
 
-    public List<SongRequest> getRequests() {
-        return List.copyOf(queue);
-    }
-
     public int size() {
         return queue.size();
     }
 
-    public boolean isEmpty() {
-        return queue.isEmpty();
-    }
 }

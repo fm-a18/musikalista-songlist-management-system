@@ -90,33 +90,6 @@ public class DataValidation {
         return value;
     }
 
-    public static int validateInt(String prompt, int min, int max) {
-        int value = 0;
-        boolean isValidated = false;
-
-        while (!isValidated) {
-            System.out.print(prompt + ": ");
-            String input = readLine().trim();
-
-            if (!input.matches("\\d+")) {
-                System.out.printf("Error: Please enter a whole number from %d to %d.%n", min, max);
-                continue;
-            }
-
-            try {
-                value = Integer.parseInt(input);
-                if (value < min || value > max) {
-                    System.out.printf("Error: Please enter a whole number from %d to %d.%n", min, max);
-                } else {
-                    isValidated = true;
-                }
-            } catch (NumberFormatException e) {
-                System.out.printf("Error: Please enter a whole number from %d to %d.%n", min, max);
-            }
-        }
-        return value;
-    }
-
     public static int intChoiceValidation(String prompt, int... choices) {
         int value = 0;
         boolean isValidated = false;

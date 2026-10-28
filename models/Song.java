@@ -2,9 +2,9 @@ package models;
 
 public class Song {
     private final int songNumber;
-    private String title;
-    private String artist;
-    private Genre genre;
+    private final String title;
+    private final String artist;
+    private final Genre genre;
 
     public Song(int songNumber, String title, String artist, Genre genre) {
         validateTitle(title);
@@ -49,21 +49,6 @@ public class Song {
 
     public Genre getGenre() {
         return genre;
-    }
-
-    public void setTitle(String title) {
-        validateTitle(title);
-        this.title = title.trim();
-    }
-
-    public void setArtist(String artist) {
-        validateArtist(artist);
-        this.artist = artist.trim();
-    }
-
-    public void setGenre(Genre genre) {
-        validateGenre(genre);
-        this.genre = genre;
     }
 
     public String getFormattedNumber() {

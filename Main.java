@@ -12,7 +12,7 @@ public class Main {
                |  \\/  | | | / __|_ _| |/ /  /_\\ | |  |_ _/ __|_   _|
                | |\\/| | |_| \\__ \\| || ' <  / _ \\| |__ | |\\__ \\ | |
                |_|  |_|\\___/|___/___|_|\\_\\/_/ \\_\\____|___|___/ |_|
-               
+            
             """;
 
     public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class Main {
         while (isRunning) {
             DisplayUtils.printMenu("WELCOME, RAKS!",
                     "#Requests",
-                    "Add New Song",                         // 1 (Enqueue)
+                    "Request Song",                         // 1 (Enqueue)
                     "View Current Song Playing",            // 2 (Peek)
                     "Play Next Requested Song",             // 3 (Dequeue, FIFO)
                     "View Requests",                        // 4
@@ -78,13 +78,13 @@ public class Main {
         String line = "=".repeat(DisplayUtils.MENU_WIDTH);
 
         System.out.println(line);
-        System.out.println(centered("Thank you for using MusikaList!", DisplayUtils.MENU_WIDTH));
-        System.out.println(centered("Keep the music playing. Goodbye!", DisplayUtils.MENU_WIDTH));
+        System.out.println(centered("Thank you for using MusikaList!"));
+        System.out.println(centered("Keep the music playing. Goodbye!"));
         System.out.println(line);
     }
 
-    private static String centered(String text, int width) {
-        int padding = Math.max(0, (width - text.length()) / 2);
+    private static String centered(String text) {
+        int padding = Math.max(0, (DisplayUtils.MENU_WIDTH - text.length()) / 2);
         return " ".repeat(padding) + text;
     }
 }

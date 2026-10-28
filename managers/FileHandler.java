@@ -20,8 +20,13 @@ public class FileHandler {
     public static final String DELIMITER = "|";
     public static final String SPLIT_REGEX = "\\|";
 
-    public final Path songsPath = Paths.get(SONGS_FILE);
-    public final Path requestsPath = Paths.get(REQUESTS_FILE);
+    private static final Path PROJECT_DIR = Paths.get("").toAbsolutePath().normalize();
+
+    public static final Path SONGS_PATH = PROJECT_DIR.resolve(SONGS_FILE);
+    public static final Path REQUESTS_PATH = PROJECT_DIR.resolve(REQUESTS_FILE);
+
+    public final Path songsPath = SONGS_PATH;
+    public final Path requestsPath = REQUESTS_PATH;
 
     public FileHandler() {
         createIfMissing(songsPath);
@@ -39,53 +44,6 @@ public class FileHandler {
 
     public boolean appendSong(Song song) {
         return appendLine(songsPath, formatSong(song));
-    }
-
-    public int getNextSongNumber() {
-        int max = 0;
-        for (Song s : readAllSongs()) {
-            if (s.getSongNumber() > max) max = s.getSongNumber();
-        }
-        return max + 1;
-    }
-
-    public boolean updateSong(Song updated) {
-        List<Song> songs = readAllSongs();
-        for (int i = 0; i < songs.size(); i++) {
-            if (songs.get(i).getSongNumber() == updated.getSongNumber()) {
-                songs.set(i, updated);
-                return saveAllSongs(songs);
-            }
-        }
-        return false;
-    }
-
-    public boolean saveAllSongs(List<Song> songs) {
-        List<String> lines = new ArrayList<>();
-        for (Song s : songs) lines.add(formatSong(s));
-        return writeLines(songsPath, lines);
-    }
-
-    public List<Integer> readRequestQueue() {
-        List<Integer> numbers = new ArrayList<>();
-        for (String line : readLines(requestsPath)) {
-            try {
-                numbers.add(Integer.parseInt(line.trim()));
-            } catch (NumberFormatException e) {
-                System.out.println("Skipping invalid request line: " + line);
-            }
-        }
-        return numbers;
-    }
-
-    public boolean appendRequest(int songNumber) {
-        return appendLine(requestsPath, String.valueOf(songNumber));
-    }
-
-    public boolean saveRequestQueue(List<Integer> songNumbers) {
-        List<String> lines = new ArrayList<>();
-        for (int n : songNumbers) lines.add(String.valueOf(n));
-        return writeLines(requestsPath, lines);
     }
 
     private void createIfMissing(Path path) {

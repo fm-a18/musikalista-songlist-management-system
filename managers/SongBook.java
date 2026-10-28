@@ -54,10 +54,6 @@ public class SongBook {
         return null;
     }
 
-    public boolean songExists(String title, String artist) {
-        return findSong(title, artist) != null;
-    }
-
     // View Song List
     public void viewSongList() {
         if (songs.isEmpty()) {
@@ -145,15 +141,6 @@ public class SongBook {
 
         DisplayUtils.songHeader("SORTED BY " + fieldNames[field - 1] + " (" + direction + ")");
         DisplayUtils.displaySongs(SongSorter.mergeSort(songs, comparator));
-    }
-
-    public Song findBySongNumber(int number) {
-        for (Song song : songs) {
-            if (song.getSongNumber() == number) {
-                return song;
-            }
-        }
-        return null;
     }
 
     public List<Song> getSongs() {
